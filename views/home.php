@@ -3,7 +3,7 @@ session_start();
 
 // Vérification si l'utilisateur est connecté
 if (!isset($_SESSION['user_id'])) {
-    header("Location: ../index.php"); // Redirection vers l'accueil si non connecté
+    header("Location: ../index.php");
     exit();
 }
 
