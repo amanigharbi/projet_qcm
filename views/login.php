@@ -24,14 +24,28 @@ unset($_SESSION['error_message'], $_SESSION['success_message']);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Connexion</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        function showResetForm() {
+            document.getElementById('login-form').classList.add('hidden');
+            document.getElementById('reset-form').classList.remove('hidden');
+        }
+
+        function showLoginForm() {
+            document.getElementById('reset-form').classList.add('hidden');
+            document.getElementById('login-form').classList.remove('hidden');
+        }
+    </script>
 </head>
 
 <body class="bg-gray-100">
 
     <!-- Navbar -->
     <nav class="bg-violet-700 p-4 flex justify-between items-center">
-        <h1 class="text-white text-xl font-bold">AZAQUIZZ</h1>
-        <a href="../index.php" class="text-white">Retour</a>
+        <button class="text-white text-2xl">&#9776;</button>
+        <div>
+            <a href="register.php" class="bg-white text-violet-700 px-4 py-2 rounded mr-2">S'inscrire</a>
+            <a href="login.php" class="bg-gray-900 text-white px-4 py-2 rounded">Se connecter</a>
+        </div>
     </nav>
 
     <!-- Formulaire de connexion -->
@@ -60,8 +74,12 @@ unset($_SESSION['error_message'], $_SESSION['success_message']);
                 <button type="submit" class="w-full bg-black text-white py-2 rounded hover:bg-gray-800">Se connecter</button>
             </form>
 
-            <div class="text-center mt-4">
+            <div class="text-right mt-4">
                 <a href="reset_request.php" class="text-purple-700 hover:underline">Mot de passe oublié ?</a>
+            </div>
+            <div class="text-center mt-4">
+                <p>Pas de compte? <a href="register.php" class="text-blue-600 hover:underline">Inscrivez-vous</a></p>
+
             </div>
         </div>
     </div>

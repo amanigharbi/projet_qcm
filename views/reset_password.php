@@ -28,10 +28,12 @@ unset($_SESSION['error_message'], $_SESSION['success_message']);
 
     <!-- Navbar -->
     <nav class="bg-violet-700 p-4 flex justify-between items-center">
-        <h1 class="text-white text-xl font-bold">AZAQUIZZ</h1>
-        <a href="login.php" class="text-white">Retour</a>
+        <button class="text-white text-2xl">&#9776;</button>
+        <div>
+            <a href="register.php" class="bg-white text-violet-700 px-4 py-2 rounded mr-2">S'inscrire</a>
+            <a href="login.php" class="bg-gray-900 text-white px-4 py-2 rounded">Se connecter</a>
+        </div>
     </nav>
-
     <!-- Formulaire de réinitialisation du mot de passe -->
     <div class="flex justify-center items-center h-screen">
         <div class="bg-white p-8 rounded-lg shadow-md w-96">
@@ -56,8 +58,13 @@ unset($_SESSION['error_message'], $_SESSION['success_message']);
                     <label class="block text-gray-700">Confirmer le mot de passe</label>
                     <input type="password" name="confirm_password" class="w-full p-2 border rounded mt-1" required>
                 </div>
-                <button type="submit" class="w-full bg-black text-white py-2 rounded hover:bg-gray-800">Modifier</button>
+                <button type="submit" class="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700">Valider</button>
             </form>
+            <div class="text-center mt-4">
+                <p>Vous n'avez rien reçu?
+                    <a href="register.php" class="text-blue-600 hover:underline"> Inscrivez-vous</a>
+                </p>
+            </div>
         </div>
     </div>
 
