@@ -34,6 +34,7 @@ unset($_SESSION['error_message'], $_SESSION['success_message']);
             <a href="login.php" class="bg-gray-900 text-white px-4 py-2 rounded">Se connecter</a>
         </div>
     </nav>
+
     <!-- Formulaire de réinitialisation du mot de passe -->
     <div class="flex justify-center items-center h-screen">
         <div class="bg-white p-8 rounded-lg shadow-md w-96">
@@ -50,16 +51,43 @@ unset($_SESSION['error_message'], $_SESSION['success_message']);
             <form action="../controllers/reset_password_process.php" method="POST">
                 <input type="hidden" name="code" value="<?= htmlspecialchars($_GET['code']); ?>">
 
+                <!-- Nouveau mot de passe -->
                 <div class="mb-4">
                     <label class="block text-gray-700">Nouveau mot de passe</label>
-                    <input type="password" name="password" class="w-full p-2 border rounded mt-1" required>
+                    <div class="relative">
+                        <input type="password" name="password" id="password" class="w-full p-2 border rounded mt-1 pr-10" required>
+                        <button type="button" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 toggle-password" data-target="password">
+                            <svg class="eye-open hidden w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                                <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2" />
+                            </svg>
+                            <svg class="eye-closed w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.5c-7.2 0-11 7.5-11 7.5s3.8 7.5 11 7.5 11-7.5 11-7.5-3.8-7.5-11-7.5zm0 3a4.5 4.5 0 0 1 4.5 4.5 4.5 4.5 0 0 1-4.5 4.5 4.5 4.5 0 0 1-4.5-4.5A4.5 4.5 0 0 1 12 7.5zM3 3l18 18" />
+                            </svg>
+                        </button>
+                    </div>
                 </div>
+
+                <!-- Confirmer le mot de passe -->
                 <div class="mb-4">
                     <label class="block text-gray-700">Confirmer le mot de passe</label>
-                    <input type="password" name="confirm_password" class="w-full p-2 border rounded mt-1" required>
+                    <div class="relative">
+                        <input type="password" name="confirm_password" id="confirm_password" class="w-full p-2 border rounded mt-1 pr-10" required>
+                        <button type="button" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 toggle-password" data-target="confirm_password">
+                            <svg class="eye-open hidden w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                                <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2" />
+                            </svg>
+                            <svg class="eye-closed w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.5c-7.2 0-11 7.5-11 7.5s3.8 7.5 11 7.5 11-7.5 11-7.5-3.8-7.5-11-7.5zm0 3a4.5 4.5 0 0 1 4.5 4.5 4.5 4.5 0 0 1-4.5 4.5 4.5 4.5 0 0 1-4.5-4.5A4.5 4.5 0 0 1 12 7.5zM3 3l18 18" />
+                            </svg>
+                        </button>
+                    </div>
                 </div>
+
                 <button type="submit" class="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700">Valider</button>
             </form>
+
             <div class="text-center mt-4">
                 <p>Vous n'avez rien reçu?
                     <a href="register.php" class="text-blue-600 hover:underline"> Inscrivez-vous</a>
@@ -67,6 +95,27 @@ unset($_SESSION['error_message'], $_SESSION['success_message']);
             </div>
         </div>
     </div>
+
+    <script>
+        document.querySelectorAll('.toggle-password').forEach(button => {
+            button.addEventListener('click', function() {
+                const targetId = this.getAttribute('data-target');
+                const passwordField = document.getElementById(targetId);
+                const eyeOpen = this.querySelector('.eye-open');
+                const eyeClosed = this.querySelector('.eye-closed');
+
+                if (passwordField.type === 'password') {
+                    passwordField.type = 'text';
+                    eyeOpen.classList.remove('hidden'); // Afficher l'œil ouvert
+                    eyeClosed.classList.add('hidden'); // Cacher l'œil fermé
+                } else {
+                    passwordField.type = 'password';
+                    eyeOpen.classList.add('hidden'); // Cacher l'œil ouvert
+                    eyeClosed.classList.remove('hidden'); // Afficher l'œil fermé
+                }
+            });
+        });
+    </script>
 
 </body>
 

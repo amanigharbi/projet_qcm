@@ -7,14 +7,11 @@ if (isset($_SESSION['user_id'])) {
     exit();
 }
 
-
-
 // Récupération des messages d'erreur ou de succès
 $errorMessage = $_SESSION['error_message'] ?? null;
 $successMessage = $_SESSION['success_message'] ?? null;
 unset($_SESSION['error_message'], $_SESSION['success_message']);
 ?>
-
 
 <!DOCTYPE html>
 <html lang="fr">
@@ -67,10 +64,29 @@ unset($_SESSION['error_message'], $_SESSION['success_message']);
                     <label class="block text-gray-700">Email ou Pseudo</label>
                     <input type="text" name="identifier" class="w-full p-2 border rounded mt-1" required>
                 </div>
+
                 <div class="mb-4">
-                    <label class="block text-gray-700">Mot de passe</label>
-                    <input type="password" name="password" class="w-full p-2 border rounded mt-1" required>
+                    <label for="password" class="block text-gray-700">Mot de passe</label>
+                    <div class="relative">
+                        <input type="password" name="password" id="password" class="w-full p-2 border rounded mt-1 pr-10" required>
+                        <!-- Icône d'affichage du mot de passe -->
+                        <button type="button" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500" id="toggle-password">
+                            <!-- Icône d'œil ouvert -->
+                            <svg id="eye-open" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-6 h-6 hidden">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                                <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2" />
+                            </svg>
+                            <!-- Icône d'œil fermé -->
+                            <svg id="eye-closed" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-6 h-6">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.5c-7.2 0-11 7.5-11 7.5s3.8 7.5 11 7.5 11-7.5 11-7.5-3.8-7.5-11-7.5zm0 3a4.5 4.5 0 0 1 4.5 4.5 4.5 4.5 0 0 1-4.5 4.5 4.5 4.5 0 0 1-4.5-4.5A4.5 4.5 0 0 1 12 7.5zM3 3l18 18" />
+                            </svg>
+                        </button>
+                    </div>
                 </div>
+
+
+
+
                 <button type="submit" class="w-full bg-black text-white py-2 rounded hover:bg-gray-800">Se connecter</button>
             </form>
 
@@ -79,11 +95,30 @@ unset($_SESSION['error_message'], $_SESSION['success_message']);
             </div>
             <div class="text-center mt-4">
                 <p>Pas de compte? <a href="register.php" class="text-blue-600 hover:underline">Inscrivez-vous</a></p>
-
             </div>
         </div>
     </div>
 
+    <script>
+        // Sélection des éléments
+        const togglePassword = document.getElementById('toggle-password');
+        const passwordField = document.getElementById('password');
+        const eyeOpen = document.getElementById('eye-open');
+        const eyeClosed = document.getElementById('eye-closed');
+
+        // Événement pour afficher/masquer le mot de passe
+        togglePassword.addEventListener('click', function() {
+            if (passwordField.type === 'password') {
+                passwordField.type = 'text';
+                eyeOpen.classList.remove('hidden'); // Afficher l'œil ouvert
+                eyeClosed.classList.add('hidden'); // Cacher l'œil fermé
+            } else {
+                passwordField.type = 'password';
+                eyeOpen.classList.add('hidden'); // Cacher l'œil ouvert
+                eyeClosed.classList.remove('hidden'); // Afficher l'œil fermé
+            }
+        });
+    </script>
 </body>
 
 </html>
