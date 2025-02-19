@@ -1,6 +1,20 @@
 <?php
 session_start();
+
+// Si l'utilisateur est déjà connecté, on le redirige vers home.php
+if (isset($_SESSION['user_id'])) {
+    header("Location: home.php");
+    exit();
+}
+
+
+
+// Récupération des messages d'erreur ou de succès
+$errorMessage = $_SESSION['error_message'] ?? null;
+$successMessage = $_SESSION['success_message'] ?? null;
+unset($_SESSION['error_message'], $_SESSION['success_message']);
 ?>
+
 
 <!DOCTYPE html>
 <html lang="fr">
@@ -9,98 +23,48 @@ session_start();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Connexion</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            background-color: #f4f4f4;
-        }
-
-        form {
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-            width: 300px;
-            text-align: center;
-        }
-
-        input {
-            width: 100%;
-            padding: 10px;
-            margin: 5px 0;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-
-        button {
-            background-color: #28a745;
-            color: white;
-            padding: 10px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            width: 100%;
-        }
-
-        button:hover {
-            background-color: #218838;
-        }
-
-        .message {
-            margin-bottom: 10px;
-            padding: 10px;
-            border-radius: 5px;
-            text-align: center;
-            width: 100%;
-        }
-
-        .error {
-            background-color: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-
-        .success {
-            background-color: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-    </style>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body>
+<body class="bg-gray-100">
 
-    <!-- Affichage des messages d'erreur ou de succès -->
-    <?php
-    if (isset($_SESSION['error_message'])) {
-        echo "<p class='message error'>" . $_SESSION['error_message'] . "</p>";
-        unset($_SESSION['error_message']);
-    }
-
-    if (isset($_SESSION['success_message'])) {
-        echo "<p class='message success'>" . $_SESSION['success_message'] . "</p>";
-        unset($_SESSION['success_message']);
-    }
-    ?>
+    <!-- Navbar -->
+    <nav class="bg-violet-700 p-4 flex justify-between items-center">
+        <h1 class="text-white text-xl font-bold">AZAQUIZZ</h1>
+        <a href="../index.php" class="text-white">Retour</a>
+    </nav>
 
     <!-- Formulaire de connexion -->
-    <form action="../controllers/login_process.php" method="POST">
-        <h2>Connexion</h2>
-        <label for="identifier">Email ou Nom d'utilisateur :</label>
-        <input type="text" name="identifier" required>
+    <div class="flex justify-center items-center h-screen">
+        <div class="bg-white p-8 rounded-lg shadow-md w-96">
+            <h2 class="text-2xl font-semibold text-center mb-6">Connexion</h2>
 
-        <label for="password">Mot de passe :</label>
-        <input type="password" name="password" required>
+            <!-- Affichage des messages d'erreur -->
+            <?php if ($errorMessage): ?>
+                <p class="text-red-500 text-center mb-4"><?= htmlspecialchars($errorMessage); ?></p>
+            <?php endif; ?>
 
-        <button type="submit">Se connecter</button>
+            <?php if ($successMessage): ?>
+                <div class="text-green-500 text-center mb-4"><?= htmlspecialchars($successMessage); ?></div>
+            <?php endif; ?>
 
-        <p><a href="reset_request.php">Mot de passe oublié ?</a></p>
-    </form>
+            <form action="../controllers/login_process.php" method="POST">
+                <div class="mb-4">
+                    <label class="block text-gray-700">Email ou Pseudo</label>
+                    <input type="text" name="identifier" class="w-full p-2 border rounded mt-1" required>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700">Mot de passe</label>
+                    <input type="password" name="password" class="w-full p-2 border rounded mt-1" required>
+                </div>
+                <button type="submit" class="w-full bg-black text-white py-2 rounded hover:bg-gray-800">Se connecter</button>
+            </form>
+
+            <div class="text-center mt-4">
+                <a href="reset_request.php" class="text-purple-700 hover:underline">Mot de passe oublié ?</a>
+            </div>
+        </div>
+    </div>
 
 </body>
 

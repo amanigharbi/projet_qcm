@@ -1,5 +1,17 @@
 <?php
 session_start();
+
+// Vérifier si le code est présent dans l'URL
+if (!isset($_GET['code'])) {
+    $_SESSION['error_message'] = "Lien de réinitialisation invalide.";
+    header("Location: login.php");
+    exit();
+}
+
+// Récupération des messages
+$errorMessage = $_SESSION['error_message'] ?? null;
+$successMessage = $_SESSION['success_message'] ?? null;
+unset($_SESSION['error_message'], $_SESSION['success_message']);
 ?>
 
 <!DOCTYPE html>
@@ -9,111 +21,44 @@ session_start();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Réinitialisation du mot de passe</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
-
-        .container {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-            width: 300px;
-            text-align: center;
-        }
-
-        h2 {
-            margin-bottom: 20px;
-        }
-
-        input {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-
-        button {
-            background-color: #28a745;
-            color: white;
-            padding: 10px;
-            border: none;
-            width: 100%;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        button:hover {
-            background-color: #218838;
-        }
-
-        .message {
-            margin-bottom: 15px;
-            padding: 10px;
-            border-radius: 5px;
-        }
-
-        .error {
-            background-color: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-
-        .success {
-            background-color: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-
-        a {
-            display: block;
-            margin-top: 10px;
-            text-decoration: none;
-            color: #007bff;
-        }
-
-        a:hover {
-            text-decoration: underline;
-        }
-    </style>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body>
+<body class="bg-gray-100">
 
-    <div class="container">
-        <h2>Réinitialisation du mot de passe</h2>
+    <!-- Navbar -->
+    <nav class="bg-violet-700 p-4 flex justify-between items-center">
+        <h1 class="text-white text-xl font-bold">AZAQUIZZ</h1>
+        <a href="login.php" class="text-white">Retour</a>
+    </nav>
 
-        <!-- Affichage des messages d'erreur ou de succès -->
-        <?php if (isset($_SESSION['error_message'])): ?>
-            <div class="message error"><?= $_SESSION['error_message']; ?></div>
-            <?php unset($_SESSION['error_message']); ?>
-        <?php endif; ?>
+    <!-- Formulaire de réinitialisation du mot de passe -->
+    <div class="flex justify-center items-center h-screen">
+        <div class="bg-white p-8 rounded-lg shadow-md w-96">
+            <h2 class="text-2xl font-semibold text-center mb-6">Réinitialisation du mot de passe</h2>
 
-        <?php if (isset($_SESSION['success_message'])): ?>
-            <div class="message success"><?= $_SESSION['success_message']; ?></div>
-            <?php unset($_SESSION['success_message']); ?>
-        <?php endif; ?>
+            <!-- Messages d'erreur / succès -->
+            <?php if ($errorMessage): ?>
+                <p class="text-red-500 text-center mb-4"><?= htmlspecialchars($errorMessage); ?></p>
+            <?php endif; ?>
+            <?php if ($successMessage): ?>
+                <p class="text-green-500 text-center mb-4"><?= htmlspecialchars($successMessage); ?></p>
+            <?php endif; ?>
 
-        <!-- Formulaire de réinitialisation du mot de passe -->
-        <form action="../controllers/reset_password_process.php" method="POST">
-            <input type="hidden" name="code" value="<?= $_GET['code'] ?>">
+            <form action="../controllers/reset_password_process.php" method="POST">
+                <input type="hidden" name="code" value="<?= htmlspecialchars($_GET['code']); ?>">
 
-            <label for="password">Nouveau mot de passe :</label>
-            <input type="password" name="password" placeholder="Votre nouveau mot de passe" required>
-
-            <label for="confirm_password">Confirmer le mot de passe :</label>
-            <input type="password" name="confirm_password" placeholder="Confirmez le mot de passe" required>
-
-            <button type="submit">Modifier le mot de passe</button>
-        </form>
-
+                <div class="mb-4">
+                    <label class="block text-gray-700">Nouveau mot de passe</label>
+                    <input type="password" name="password" class="w-full p-2 border rounded mt-1" required>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700">Confirmer le mot de passe</label>
+                    <input type="password" name="confirm_password" class="w-full p-2 border rounded mt-1" required>
+                </div>
+                <button type="submit" class="w-full bg-black text-white py-2 rounded hover:bg-gray-800">Modifier</button>
+            </form>
+        </div>
     </div>
 
 </body>
