@@ -36,7 +36,7 @@ $nomUtilisateur = $_SESSION['nom'] ?? "Utilisateur";
         <div class="bg-white p-8 rounded-lg shadow-md w-96 text-center">
             <h2 class="text-2xl font-semibold mb-4">Bienvenue, <?= htmlspecialchars($nomUtilisateur); ?> !</h2>
             <p class="text-gray-600 mb-4">Prêt à tester tes connaissances ?</p>
-            <a href="#" class="bg-violet-700 text-white px-4 py-2 rounded hover:bg-violet-800">Commencer</a>
+            <a href="quiz.php" class="bg-violet-700 text-white px-4 py-2 rounded hover:bg-violet-800">Commencer</a>
         </div>
     </div>
 
