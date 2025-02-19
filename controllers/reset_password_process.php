@@ -12,7 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     // 1. Vérifier si les champs sont vides
     if (empty($code) || empty($newPassword) || empty($confirmPassword)) {
-        $_SESSION['error_message'] = "Tous les champs sont requis.";
+        $_SESSION['error_message'] = "Merci de remplir tous les champs.";
         header("Location: ../views/reset_password.php?code=$code");
         exit();
     }

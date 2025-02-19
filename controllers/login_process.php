@@ -10,7 +10,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Vérification de la validité des champs
     if (empty($identifier) || empty($password)) {
         $_SESSION['error_message'] = "Veuillez remplir tous les champs.";
-        header("Location: ../views/login.php"); // Redirige vers la page de login avec l'erreur
+        header("Location: ../views/login.php");
         exit();
     }
 
@@ -20,12 +20,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     // Si la connexion réussit
     if ($result === true) {
-        header("Location: ../index.php"); // Redirection vers la page d'accueil
+        header("Location: ../index.php");
         exit();
     } else {
-        $_SESSION['error_message'] = $result; // Sauvegarder le message d'erreur
-        header("Location: ../views/login.php"); // Redirection vers la page de login avec l'erreur
+        $_SESSION['error_message'] = $result;
+        header("Location: ../views/login.php");
         exit();
     }
 }
-?>

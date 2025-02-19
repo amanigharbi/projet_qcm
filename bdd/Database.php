@@ -1,19 +1,21 @@
 <?php
 
-require_once __DIR__ . '/../vendor/autoload.php'; // Pour charger le .env si tu utilises Composer
+require_once __DIR__ . '/../vendor/autoload.php';
 
 use Dotenv\Dotenv;
 
-class Database {
+class Database
+{
     private $host;
     private $dbname;
     private $username;
     private $password;
     public $conn;
 
-    public function __construct() {
+    public function __construct()
+    {
         // Charge les variables d'environnement
-        $dotenv = Dotenv::createImmutable(__DIR__.'/..');
+        $dotenv = Dotenv::createImmutable(__DIR__ . '/..');
         $dotenv->load();
 
         // Récupère les informations de connexion depuis les variables d'environnement
@@ -25,9 +27,9 @@ class Database {
         try {
             // Création de la connexion PDO
             $this->conn = new PDO(
-                "mysql:host=$this->host;dbname=$this->dbname;charset=utf8mb4", 
-                $this->username, 
-                $this->password, 
+                "mysql:host=$this->host;dbname=$this->dbname;charset=utf8mb4",
+                $this->username,
+                $this->password,
                 [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
             );
         } catch (PDOException $e) {
@@ -35,5 +37,3 @@ class Database {
         }
     }
 }
-
-?>

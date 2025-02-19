@@ -4,6 +4,7 @@ session_start();
 
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -18,6 +19,7 @@ session_start();
             height: 100vh;
             background-color: #f4f4f4;
         }
+
         form {
             background: white;
             padding: 20px;
@@ -26,6 +28,7 @@ session_start();
             width: 300px;
             text-align: center;
         }
+
         input {
             width: 100%;
             padding: 10px;
@@ -33,6 +36,7 @@ session_start();
             border: 1px solid #ccc;
             border-radius: 5px;
         }
+
         button {
             background-color: #28a745;
             color: white;
@@ -42,9 +46,11 @@ session_start();
             cursor: pointer;
             width: 100%;
         }
+
         button:hover {
             background-color: #218838;
         }
+
         .message {
             margin-bottom: 10px;
             padding: 10px;
@@ -52,11 +58,13 @@ session_start();
             text-align: center;
             width: 100%;
         }
+
         .error {
             background-color: #f8d7da;
             color: #721c24;
             border: 1px solid #f5c6cb;
         }
+
         .success {
             background-color: #d4edda;
             color: #155724;
@@ -64,18 +72,19 @@ session_start();
         }
     </style>
 </head>
+
 <body>
 
     <!-- Affichage des messages d'erreur ou de succès -->
     <?php
     if (isset($_SESSION['error_message'])) {
         echo "<p class='message error'>" . $_SESSION['error_message'] . "</p>";
-        unset($_SESSION['error_message']); // Supprimer après affichage
+        unset($_SESSION['error_message']);
     }
-    
+
     if (isset($_SESSION['success_message'])) {
         echo "<p class='message success'>" . $_SESSION['success_message'] . "</p>";
-        unset($_SESSION['success_message']); // Supprimer après affichage
+        unset($_SESSION['success_message']);
     }
     ?>
 
@@ -84,14 +93,15 @@ session_start();
         <h2>Connexion</h2>
         <label for="identifier">Email ou Nom d'utilisateur :</label>
         <input type="text" name="identifier" required>
-        
+
         <label for="password">Mot de passe :</label>
         <input type="password" name="password" required>
-        
+
         <button type="submit">Se connecter</button>
 
         <p><a href="reset_request.php">Mot de passe oublié ?</a></p>
     </form>
 
 </body>
+
 </html>

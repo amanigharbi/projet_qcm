@@ -4,6 +4,7 @@ session_start();
 
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -83,36 +84,38 @@ session_start();
         }
     </style>
 </head>
+
 <body>
 
-<div class="container">
-    <h2>Réinitialisation du mot de passe</h2>
+    <div class="container">
+        <h2>Réinitialisation du mot de passe</h2>
 
-    <!-- Affichage des messages d'erreur ou de succès -->
-    <?php if (isset($_SESSION['error_message'])): ?>
-        <div class="message error"><?= $_SESSION['error_message']; ?></div>
-        <?php unset($_SESSION['error_message']); ?> <!-- Suppression du message d'erreur après affichage -->
-    <?php endif; ?>
+        <!-- Affichage des messages d'erreur ou de succès -->
+        <?php if (isset($_SESSION['error_message'])): ?>
+            <div class="message error"><?= $_SESSION['error_message']; ?></div>
+            <?php unset($_SESSION['error_message']); ?>
+        <?php endif; ?>
 
-    <?php if (isset($_SESSION['success_message'])): ?>
-        <div class="message success"><?= $_SESSION['success_message']; ?></div>
-        <?php unset($_SESSION['success_message']); ?> <!-- Suppression du message de succès après affichage -->
-    <?php endif; ?>
+        <?php if (isset($_SESSION['success_message'])): ?>
+            <div class="message success"><?= $_SESSION['success_message']; ?></div>
+            <?php unset($_SESSION['success_message']); ?>
+        <?php endif; ?>
 
-    <!-- Formulaire de réinitialisation du mot de passe -->
-    <form action="../controllers/reset_password_process.php" method="POST">
-        <input type="hidden" name="code" value="<?= $_GET['code'] ?>">
+        <!-- Formulaire de réinitialisation du mot de passe -->
+        <form action="../controllers/reset_password_process.php" method="POST">
+            <input type="hidden" name="code" value="<?= $_GET['code'] ?>">
 
-        <label for="password">Nouveau mot de passe :</label>
-        <input type="password" name="password" placeholder="Votre nouveau mot de passe" required>
+            <label for="password">Nouveau mot de passe :</label>
+            <input type="password" name="password" placeholder="Votre nouveau mot de passe" required>
 
-        <label for="confirm_password">Confirmer le mot de passe :</label>
-        <input type="password" name="confirm_password" placeholder="Confirmez le mot de passe" required>
+            <label for="confirm_password">Confirmer le mot de passe :</label>
+            <input type="password" name="confirm_password" placeholder="Confirmez le mot de passe" required>
 
-        <button type="submit">Modifier le mot de passe</button>
-    </form>
+            <button type="submit">Modifier le mot de passe</button>
+        </form>
 
-</div>
+    </div>
 
 </body>
+
 </html>
