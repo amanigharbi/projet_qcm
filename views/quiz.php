@@ -134,7 +134,7 @@ $currentQuestion = $_SESSION['currentQuestion'];
     </div>
 
     <script>
-        let timeLeft = 10; // 1 minute en secondes
+        let timeLeft = 60; // 1 minute en secondes
         let timerElement = document.getElementById('timer');
 
         function startTimer() {
