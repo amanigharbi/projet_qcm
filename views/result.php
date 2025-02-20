@@ -1,9 +1,16 @@
 <?php
 session_start();
-$score = $_SESSION['score'];
-$totalQuestions = 4;
+require_once '../bdd/database.php';
 
-session_destroy();  // Destroy session when the quiz is finished
+if (!isset($_SESSION['user_id'])) {
+    header("Location: ../index.php");
+    exit();
+}
+
+// Vérification du score
+$score = $_GET['score'] ?? 0;
+$questions = $_SESSION['responses'] ?? [];
+$totalQuestions = count($questions);
 ?>
 
 <!DOCTYPE html>
@@ -12,7 +19,7 @@ session_destroy();  // Destroy session when the quiz is finished
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Résultat Quiz</title>
+    <title>Résultats du Quiz</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         function openMenu() {
@@ -28,52 +35,44 @@ session_destroy();  // Destroy session when the quiz is finished
 <body class="bg-gray-100">
     <?php include 'menu.php'; ?>
 
-    <!-- Navbar -->
     <nav class="bg-violet-700 p-6 flex justify-between items-center">
-        <!-- <h1 class="text-white text-2xl font-bold">AZAQUIZZ</h1> -->
         <button onclick="openMenu()" class="text-white text-2xl">&#9776;</button>
-
         <div>
             <a href="../controllers/logout.php" class="bg-red-600 text-white px-6 py-3 rounded text-lg">Déconnexion</a>
         </div>
     </nav>
 
-    <!-- Résultats -->
-    <div class="flex justify-center items-center max-h-screen">
-        <div class="bg-white p-8 rounded-lg shadow-lg w-100 text-center">
+    <div class="flex justify-center items-center min-h-screen">
+        <div class="bg-white p-8 rounded-lg shadow-lg w-[600px] text-center">
             <h2 class="text-2xl font-semibold mb-6 text-gray-800">Quiz Terminé !</h2>
-            <p class="text-xl font-semibold text-green-600 mb-6">Votre score : <?= $score ?> / <?= $totalQuestions ?></p>
+            <p class="text-xl font-semibold text-green-600 mb-6">
+                Votre score : <?= htmlspecialchars($score); ?> / <?= htmlspecialchars($totalQuestions); ?>
+            </p>
 
             <h3 class="text-lg font-medium mb-4 text-gray-800">Récapitulatif des réponses :</h3>
-            <div class="overflow-x-auto">
-                <table class="table-auto w-full text-left border-collapse">
-                    <thead>
-                        <tr class="bg-violet-700 text-white">
-                            <th class="px-4 py-2">Question</th>
-                            <th class="px-4 py-2">Réponse donnée</th>
-                            <th class="px-4 py-2">Statut</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach ($_SESSION['responses'] as $response) : ?>
-                            <tr>
-                                <td class="px-4 py-2 border-b text-gray-700"><?= htmlspecialchars($response['question']); ?></td>
-                                <td class="px-4 py-2 border-b text-gray-700"><?= htmlspecialchars($response['answer']); ?></td>
-                                <td class="px-4 py-2 border-b <?= $response['isCorrect'] ? 'text-green-600' : 'text-red-600'; ?>">
-                                    <?= $response['isCorrect'] ? 'Correct' : 'Incorrect'; ?>
-                                </td>
-                            </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
+            <div class="text-left">
+                <?php foreach ($questions as $index => $question) : ?>
+                    <div class="mb-4 p-4 border-l-4 rounded
+                        <?= $question['isCorrect'] ? 'border-green-500 bg-green-100' : 'border-red-500 bg-red-100'; ?>">
+                        <p class="font-semibold"><?= ($index + 1) . ". " . htmlspecialchars($question['question']); ?></p>
+                        <p class="text-gray-800">
+                            <strong>Réponse donnée :</strong>
+                            <?= empty($question['answer']) ? "<span class='text-orange-600'>Aucune réponse</span>" : htmlspecialchars($question['answer']); ?>
+                        </p>
+                        <p class="text-gray-800">
+                            <strong>Statut :</strong>
+                            <?= $question['isCorrect'] ? "<span class='text-green-600'>Correct</span>" : "<span class='text-red-600'>Incorrect</span>"; ?>
+                        </p>
+                    </div>
+                <?php endforeach; ?>
             </div>
 
-            <a href="quiz.php" class="bg-violet-700 text-white px-6 py-3 rounded hover:bg-violet-800 mt-6 inline-block text-lg">
-                Rejouer
+            <a href="quiz.php?qcm_id=<?= $_SESSION['current_qcm']; ?>&restart=1"
+                class="mt-6 inline-block bg-violet-700 text-white px-6 py-3 rounded text-lg hover:bg-violet-800">
+                Recommencer
             </a>
         </div>
     </div>
-
 </body>
 
 </html>
