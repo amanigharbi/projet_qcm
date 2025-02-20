@@ -6,14 +6,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inscription</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        function openMenu() {
+            document.getElementById("sidebar").classList.remove("-translate-x-full");
+        }
+
+        function closeMenu() {
+            document.getElementById("sidebar").classList.add("-translate-x-full");
+        }
+    </script>
 </head>
 
 <body class="bg-gray-100">
+    <?php include 'menu.php'; ?>
 
 
     <!-- Navbar -->
     <nav class="bg-violet-700 p-4 flex justify-between items-center">
-        <button class="text-white text-2xl">&#9776;</button>
+        <button onclick="openMenu()" class="text-white text-2xl">&#9776;</button>
         <div>
             <a href="register.php" class="bg-white text-violet-700 px-4 py-2 rounded mr-2">S'inscrire</a>
             <a href="login.php" class="bg-gray-900 text-white px-4 py-2 rounded">Se connecter</a>

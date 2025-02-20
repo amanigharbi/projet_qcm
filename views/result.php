@@ -14,13 +14,25 @@ session_destroy();  // Destroy session when the quiz is finished
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Résultat Quiz</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        function openMenu() {
+            document.getElementById("sidebar").classList.remove("-translate-x-full");
+        }
+
+        function closeMenu() {
+            document.getElementById("sidebar").classList.add("-translate-x-full");
+        }
+    </script>
 </head>
 
 <body class="bg-gray-100">
+    <?php include 'menu.php'; ?>
 
     <!-- Navbar -->
     <nav class="bg-violet-700 p-6 flex justify-between items-center">
-        <h1 class="text-white text-2xl font-bold">AZAQUIZZ</h1>
+        <!-- <h1 class="text-white text-2xl font-bold">AZAQUIZZ</h1> -->
+        <button onclick="openMenu()" class="text-white text-2xl">&#9776;</button>
+
         <div>
             <a href="../controllers/logout.php" class="bg-red-600 text-white px-6 py-3 rounded text-lg">Déconnexion</a>
         </div>
