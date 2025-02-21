@@ -16,6 +16,12 @@ class Quiz
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public function getAllCategories()
+    {
+        $stmt = $this->pdo->query("SELECT * FROM categories");
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     public function getUserScores($user_id)
     {
         $stmt = $this->pdo->prepare("
@@ -45,7 +51,7 @@ class Quiz
         $reponses = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         if (empty($reponses)) {
-            die("🚨 Aucune réponse trouvée pour la question ID : " . $question_id);
+            die("Aucune réponse trouvée pour la question ID : " . $question_id);
         }
 
         return $reponses;
