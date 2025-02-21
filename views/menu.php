@@ -102,6 +102,10 @@ $targetProfile = $isLoggedIn ? 'profile.php' : 'index.php';
                 <?php endif; ?>
             </div>
         </div>
+        <!-- À propos -->
+        <div>
+            <a href="about.php" class="block py-2 px-4 hover:bg-violet-600">À propos</a>
+        </div>
     </nav>
 
     <p class="text-sm p-4 mt-auto">Copyright ©2025 AzaQuizz</p>

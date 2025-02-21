@@ -68,8 +68,7 @@ $availableCateg = $quiz->getAllCategories();
             </div>
         <?php endif; ?>
     </nav>
-    <!-- Espace entre la navbar et la présentation -->
-    <div class="py-12"></div>
+
 
     <!-- Présentation -->
     <main class="text-center py-12">
@@ -79,7 +78,6 @@ $availableCateg = $quiz->getAllCategories();
     <!-- Section image et catégories alignées -->
     <section class="flex flex-col items-center justify-center py-8 w-full max-w-screen-lg mx-auto">
         <div class="flex items-center justify-between w-full">
-            <!-- Image -->
             <div class="w-1/3 flex justify-center">
                 <img src="../Image/logo_violet.svg" alt="Logo" class="max-h-40 max-w-full mix-blend-multiply opacity-90">
             </div>
@@ -111,6 +109,16 @@ $availableCateg = $quiz->getAllCategories();
             </div>
         </section>
     </section>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const title = document.getElementById("site-title");
+            title.style.opacity = 0;
+            setTimeout(() => {
+                title.style.transition = "opacity 1.5s ease-in-out";
+                title.style.opacity = 1;
+            }, 500);
+        });
+    </script>
 </body>
 
 </html>
