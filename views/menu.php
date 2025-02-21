@@ -1,10 +1,3 @@
-<?php
-require_once '../bdd/database.php';
-require_once '../models/Quiz.php';
-$quiz = new Quiz();
-$availableQuizzes = $quiz->getAllQuizzes();
-?>
-
 <!-- Fond semi-transparent pour masquer la page quand le menu est ouvert -->
 <div id="overlay" class="fixed inset-0 bg-black bg-opacity-50 hidden" onclick="closeMenu()"></div>
 
@@ -32,18 +25,13 @@ $availableQuizzes = $quiz->getAllQuizzes();
                     Par thèmes <span>▾</span>
                 </label>
                 <div class="hidden peer-checked:block bg-violet-500">
-                    <?php foreach ($availableQuizzes as $quiz) : ?>
-                        <a href="quiz.php?qcm_id=<?= $quiz['id']; ?>"
-                            class="block py-2 px-8 hover:bg-violet-400">
-                            <?= htmlspecialchars($quiz['titre']); ?>
-                        </a>
-                    <?php endforeach; ?>
-                    <!-- <a href="#" class="block py-2 px-8 hover:bg-violet-400">Histoire</a>
+
+                    <a href="#" class="block py-2 px-8 hover:bg-violet-400">Histoire</a>
                     <a href="#" class="block py-2 px-8 hover:bg-violet-400">Géographie</a>
                     <a href="#" class="block py-2 px-8 hover:bg-violet-400">Sciences</a>
                     <a href="#" class="block py-2 px-8 hover:bg-violet-400">Cinéma</a>
                     <a href="#" class="block py-2 px-8 hover:bg-violet-400">Art</a>
-                    <a href="#" class="block py-2 px-8 hover:bg-violet-400">Sport</a> -->
+                    <a href="#" class="block py-2 px-8 hover:bg-violet-400">Sport</a>
                 </div>
                 <a href="#" class="block py-2 px-6 hover:bg-violet-500">Tous les QCM</a>
             </div>

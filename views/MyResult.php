@@ -39,9 +39,24 @@ $userScores = $quiz->getUserScores($user_id);
 
     <nav class="bg-violet-700 p-4 flex justify-between items-center">
         <button onclick="openMenu()" class="text-white text-2xl">&#9776;</button>
-        <div>
-            <a href="../controllers/logout.php" class="bg-red-600 text-white px-4 py-2 rounded">Déconnexion</a>
-        </div>
+        <?php if (isset($_SESSION['nom_utilisateur'])): ?>
+            <div class="flex items-center space-x-4 p-3 rounded-lg shadow-md bg-white">
+                <!-- Icône utilisateur et nom -->
+                <div class="flex items-center space-x-3">
+                    <img src="https://ui-avatars.com/api/?name=<?= urlencode($_SESSION['nom_utilisateur']); ?>&background=6B46C1&color=fff&size=40"
+                        alt="Avatar" class="w-10 h-10 rounded-full border border-white shadow">
+                    <span class="text-gray-900 font-bold text-lg"><?= htmlspecialchars($_SESSION['nom_utilisateur']); ?></span>
+                </div>
+
+                <!-- Bouton de déconnexion -->
+                <a href="../controllers/logout.php" class="flex items-center bg-white text-violet-700 px-4 py-2 rounded-lg border border-violet-700 hover:bg-violet-100 transition font-medium">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1 text-violet-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1m0-10V7" />
+                    </svg>
+                    Déconnexion
+                </a>
+            </div>
+        <?php endif; ?>
     </nav>
 
     <div class="container mx-auto mt-10">
