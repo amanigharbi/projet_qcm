@@ -104,7 +104,11 @@ $targetProfile = $isLoggedIn ? 'profile.php' : 'index.php';
         </div>
         <!-- À propos -->
         <div>
-            <a href="about.php" class="block py-2 px-4 hover:bg-violet-600">À propos</a>
+            <?php if ($isLoggedIn) : ?>
+                <a href="about.php" class="block py-2 px-6 hover:bg-violet-500">A propos</a>
+            <?php else : ?>
+                <a href="views/about.php" class="block py-2 px-6 hover:bg-violet-500">A propos</a>
+            <?php endif; ?>
         </div>
     </nav>
 

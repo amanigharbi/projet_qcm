@@ -1,3 +1,39 @@
+<?php
+
+require_once __DIR__ . '/../bdd/Database.php';
+require_once __DIR__ . '/../controllers/AuthController.php';
+
+$authController = new AuthController();
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $username = $_POST['username'];
+    $email = $_POST['email'];
+    $password = $_POST['password'];
+
+    //validation 
+    if (empty($username) || empty($email) || empty($password)) {
+        $error = "Tous les champs sont obligatoires.";
+    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $error = "Format d'email invalide.";
+    }
+    // enregistrer l'utilisateur
+    else {
+        $registerResult = $authController->register($username, $email, $password);
+        if ($registerResult === true) {
+            // Redirection vers le login
+            header("Location: login.php");
+            exit();
+        }
+        // enregistrer le message d'erreur
+        else {
+            $error = $registerResult;
+        }
+    }
+}
+
+
+
+?>
 <!DOCTYPE html>
 <html lang="fr">
 

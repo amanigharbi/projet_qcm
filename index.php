@@ -58,8 +58,6 @@ $categories = $categorieModel->getAllCategories();
         </div>
     </nav>
 
-    <div class="py-12"></div>
-
     <main class="text-center py-12">
         <h1 id="site-title" class="text-5xl font-bold w-full text-black">AzaQuizz</h1>
     </main>

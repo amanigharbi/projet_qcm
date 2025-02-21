@@ -1,18 +1,24 @@
+<?php
+session_start();
+?>
+
 <!DOCTYPE html>
 <html lang="fr">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> A Propos - Azaquizz</title>
+    <title> À Propos - AzaQuizz </title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         function openMenu() {
             document.getElementById("sidebar").classList.remove("-translate-x-full");
+            document.getElementById("overlay").classList.remove("hidden");
         }
 
         function closeMenu() {
             document.getElementById("sidebar").classList.add("-translate-x-full");
+            document.getElementById("overlay").classList.add("hidden");
         }
     </script>
     <style>
@@ -23,10 +29,6 @@
             flex-direction: column;
             align-items: center;
             border: 5px solid transparent;
-        }
-
-        nav {
-            position: relative;
         }
 
         .content {
@@ -40,25 +42,37 @@
 <body class="bg-gray-100">
     <?php include 'menu.php'; ?>
 
-    <!-- Navbar -->
-    <nav class="bg-violet-700 p-4 flex justify-between items-center w-full fixed top-0 left-0 shadow-md z-50">
+    <!-- Navbar conditionnelle -->
+    <nav class="bg-violet-700 p-4 flex justify-between items-center w-full">
         <button onclick="openMenu()" class="text-white text-2xl">&#9776;</button>
-        <div>
-            <a href="../controllers/logout.php" class="bg-white text-violet-700 px-4 py-2 rounded mr-2">Se déconnecter</a>
-            <a href="profil.php" class="bg-gray-900 text-white px-4 py-2 rounded">Mon profil</a>
-        </div>
+
+        <?php if (isset($_SESSION['user_id'])) : ?>
+            <div class="flex items-center space-x-4 p-3 rounded-lg shadow-md bg-white">
+                <div class="flex items-center space-x-3">
+                    <img src="https://ui-avatars.com/api/?name=<?= urlencode($_SESSION['nom'] ?? 'Utilisateur'); ?>&background=6B46C1&color=fff&size=40"
+                        alt="Avatar" class="w-10 h-10 rounded-full border border-white shadow">
+                    <span class="text-gray-900 font-bold text-lg"><?= htmlspecialchars($_SESSION['nom'] ?? 'Utilisateur'); ?></span>
+                </div>
+                <a href="../controllers/logout.php" class="bg-white text-violet-700 px-4 py-2 rounded-lg border border-violet-700 hover:bg-violet-100 transition font-medium">
+                    Déconnexion
+                </a>
+            </div>
+        <?php else : ?>
+            <div>
+                <a href="register.php" class="bg-white text-violet-700 px-4 py-2 rounded mr-2">S'inscrire</a>
+                <a href="login.php" class="bg-gray-900 text-white px-4 py-2 rounded">Se connecter</a>
+            </div>
+        <?php endif; ?>
     </nav>
 
     <!-- Espace entre la navbar et la présentation -->
-    <div class="py-8"></div>
-
+    <div class="py-16"></div>
 
     <!-- Présentation -->
-    <main class="text-center py-6">
-        <h1 id="site-title" class="text-5xl font-bold w-full text-black">AzaQuizz</h1>
+    <main class="text-center py-6 w-full max-w-3xl mx-auto">
+        <h1 id="site-title" class="text-5xl font-bold text-black">AzaQuizz</h1>
     </main>
 
-    <!-- Section image et catégories alignées -->
     <section class="flex flex-col items-center justify-center py-4 w-full max-w-2xl mx-auto">
         <h2 class="text-2xl font-semibold text-gray-700">À propos de nous<br></br></h2>
         <p class="text-base text-gray-600  leading-relaxed">
@@ -72,6 +86,7 @@
             <br>Merci de votre soutien et amusez-vous bien ! 🚀
         </p>
     </section>
+
 </body>
 
 </html>
