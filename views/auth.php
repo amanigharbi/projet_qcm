@@ -1,5 +1,11 @@
 <?php
-session_start();
+
+require_once '../controllers/AuthController.php';
+require_once '../bdd/Database.php';
+
+$auth = new AuthController($db);
+
+
 
 // vérifier si l'utilisateur est connecté
 function isLoggedIn(): bool

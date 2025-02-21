@@ -6,31 +6,42 @@ require_once __DIR__ . '/../controllers/AuthController.php';
 $authController = new AuthController();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $nom = $_POST['nom'];
+    $prenom = $_POST['prenom'];
     $username = $_POST['username'];
     $email = $_POST['email'];
     $password = $_POST['password'];
+    $confirmation_mot_de_passe = $_POST['confirm_password'];
+
 
     //validation 
-    if (empty($username) || empty($email) || empty($password)) {
-        $error = "Tous les champs sont obligatoires.";
-    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $error = "Format d'email invalide.";
+    $errors = [];
+    if (empty($nom) || empty($prenom) || empty($username) || empty($email) || empty($password) || empty($confirmation_mot_de_passe)) {
+        $errors[] = "Tous les champs sont obligatoires.";
+    }
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $errors[] = "Format d'email invalide.";
+    }
+    if ($password !== $confirmation_mot_de_passe) {
+        $errors[] = "Le mot de passe et la confirmation doivent correspondre.";
     }
     // enregistrer l'utilisateur
-    else {
-        $registerResult = $authController->register($username, $email, $password);
+    if (empty($errors)) {
+        $registerResult = $authController->register($nom, $prenom, $username, $email, $password);
         if ($registerResult === true) {
-            // Redirection vers le login
             header("Location: login.php");
+
             exit();
+        } else {
+            $errors[] = $registerResult;
         }
-        // enregistrer le message d'erreur
-        else {
-            $error = $registerResult;
+    }
+    if (!empty($errors)) {
+        foreach ($errors as $error) {
+            echo "<p style='color: red;'>$error</p>";
         }
     }
 }
-
 
 
 ?>
@@ -86,40 +97,65 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <div class="flex justify-center items-center h-screen">
         <div class="bg-white p-8 rounded-lg shadow-md custom-width">
             <h2 class="text-2xl font-semibold text-center mb-6">Inscription</h2>
-            <form>
+
+            <form method="POST">
                 <div class="grid grid-cols-2 gap-4 mb-4">
                     <div>
                         <label class="block text-gray-700">Nom</label>
-                        <input type="text" class="w-full p-2 border rounded mt-1" placeholder="Nom">
+                        <input type="text" class="w-full p-2 border rounded mt-1" placeholder="Nom" name="nom">
                     </div>
                     <div>
                         <label class="block text-gray-700">Prénom</label>
-                        <input type="text" class="w-full p-2 border rounded mt-1" placeholder="Prénom">
+                        <input type="text" class="w-full p-2 border rounded mt-1" placeholder="Prénom" name="prenom">
                     </div>
                 </div>
                 <div class="mb-4">
                     <label class="block text-gray-700">Pseudo</label>
-                    <input type="text" class="w-full p-2 border rounded mt-1" placeholder="Pseudo">
+                    <input type="text" class="w-full p-2 border rounded mt-1" placeholder="Pseudo" name="username">
                 </div>
                 <div class="mb-4">
                     <label class="block text-gray-700">Email</label>
-                    <input type="email" class="w-full p-2 border rounded mt-1" placeholder="Email">
+                    <input type="email" class="w-full p-2 border rounded mt-1" placeholder="Email" name="email">
                 </div>
                 <div class="mb-4">
                     <label class="block text-gray-700">Confirmation de l’email</label>
-                    <input type="email" class="w-full p-2 border rounded mt-1" placeholder="Confirmez votre email">
+                    <input type="email" class="w-full p-2 border rounded mt-1" placeholder="Confirmez votre email" name="confirm_email">
                 </div>
                 <div class="grid grid-cols-2 gap-4 mb-4">
-                    <div>
+                    <div class="mb-4">
                         <label class="block text-gray-700">Mot de passe</label>
-                        <input type="password" class="w-full p-2 border rounded mt-1" placeholder="Mot de passe">
+                        <div class="relative">
+                            <input type="password" name="password" id="password" class="w-full p-2 border rounded mt-1 pr-10" required>
+                            <button type="button" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500" id="toggle-password">
+                                <svg id="eye-open-password" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-6 h-6 hidden">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8z" />
+                                    <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2" />
+                                </svg>
+                                <svg id="eye-closed-password" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-6 h-6">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.5c-7.2 0-11 7.5-11 7.5s3.8 7.5 11 7.5 11-7.5 11-7.5-3.8-7.5-11-7.5zm0 3a4.5 4.5 0 0 1 4.5 4.5 4.5 4.5 0 0 1-4.5 4.5 4.5 4.5 0 0 1-4.5-4.5A4.5 4.5 0 0 1 12 7.5zM3 3l18 18" />
+                                </svg>
+                            </button>
+                        </div>
                     </div>
-                    <div>
-                        <label class="block text-gray-700">Confirmation du mot de passe</label>
-                        <input type="password" class="w-full p-2 border rounded mt-1" placeholder="Confirmez le mot de passe">
+
+                    <div class="mb-4">
+                        <label class="block text-gray-700">Confirmer le mot de passe</label>
+                        <div class="relative">
+                            <input type="password" name="confirm_password" id="confirm-password" class="w-full p-2 border rounded mt-1 pr-10" required>
+                            <button type="button" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500" id="toggle-confirm-password">
+                                <svg id="eye-open-confirm" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-6 h-6 hidden">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                                    <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2" />
+                                </svg>
+                                <svg id="eye-closed-confirm" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-6 h-6">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.5c-7.2 0-11 7.5-11 7.5s3.8 7.5 11 7.5 11-7.5 11-7.5-3.8-7.5-11-7.5zm0 3a4.5 4.5 0 0 1 4.5 4.5 4.5 4.5 0 0 1-4.5 4.5 4.5 4.5 0 0 1-4.5-4.5A4.5 4.5 0 0 1 12 7.5zM3 3l18 18" />
+                                </svg>
+                            </button>
+                        </div>
                     </div>
+
                 </div>
-                <button class="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700">Valider</button>
+                <button type="submit" class="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700">Valider</button>
             </form>
             <div class="text-center mt-4">
                 <p>Déjà un compte?
@@ -128,6 +164,31 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </div>
         </div>
     </div>
+    <script>
+        function togglePasswordVisibility(inputId, openEyeId, closedEyeId) {
+            const input = document.getElementById(inputId);
+            const openEye = document.getElementById(openEyeId);
+            const closedEye = document.getElementById(closedEyeId);
+
+            if (input.type === "password") {
+                input.type = "text";
+                openEye.classList.remove("hidden");
+                closedEye.classList.add("hidden");
+            } else {
+                input.type = "password";
+                openEye.classList.add("hidden");
+                closedEye.classList.remove("hidden");
+            }
+        }
+
+        document.getElementById('toggle-password').addEventListener('click', () => {
+            togglePasswordVisibility('password', 'eye-open-password', 'eye-closed-password');
+        });
+
+        document.getElementById('toggle-confirm-password').addEventListener('click', () => {
+            togglePasswordVisibility('confirm-password', 'eye-open-confirm', 'eye-closed-confirm');
+        });
+    </script>
 </body>
 
 </html>

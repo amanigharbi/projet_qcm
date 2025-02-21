@@ -20,10 +20,10 @@ class AuthController
 
         $this->userModel = new User();
     }
-    public function register(string $username, string $email, string $password): mixed
+    public function register(string $nom, string $prenom, string $username, string $email, string $password): mixed
     {
         // vérifier si l'email existe déjà
-        $stmt = $this->db->conn->prepare("SELECT id FROM users WHERE email = ?");
+        $stmt = $this->db->conn->prepare("SELECT id FROM utilisateurs WHERE email = ?");
         $stmt->execute([$email]);
         $existingUser = $stmt->fetch(PDO::FETCH_ASSOC);
         if ($existingUser) {
@@ -32,14 +32,15 @@ class AuthController
 
 
 
-
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
         $confirmationToken = bin2hex(random_bytes(32));
 
-        // insérer l'utilisateur dans la bdd 
-        $stmt = $this->db->conn->prepare("INSERT INTO users (username, email, password, confirmation_token, is_active) VALUES (?, ?, ?, ?, 0)");
-        $stmt->execute([$username, $email, $hashedPassword, $confirmationToken]);
 
+        // insérer l'utilisateur dans la bdd 
+        $stmt = $this->db->conn->prepare("INSERT INTO utilisateurs (nom,prenom,nom_utilisateur, email, mot_de_passe, code_confirmation, est_confirme) VALUES (?,?,?, ?, ?, ?, 0)");
+        $stmt->execute([$nom, $prenom, $username, $email, $hashedPassword, $confirmationToken]);
+
+        var_dump($stmt->errorInfo());
 
 
 
@@ -63,6 +64,7 @@ class AuthController
             $mail->Password = $_ENV['MAIL_PASSWORD'];
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
             $mail->Port = $_ENV['MAIL_PORT'];
+            $mail->CharSet = 'UTF-8';
 
 
             $mail->setFrom('no-reply@example.com', 'AZAQUIZZ');
@@ -70,7 +72,7 @@ class AuthController
 
             $mail->isHTML(true);
             $mail->Subject = 'Confirmation de votre inscription';
-            $confirmationLink = 'http://localhost/QCMProject/confirm.php?token=' . $token;
+            $confirmationLink = 'http://localhost/QCMProject/views/confirm.php?token=' . $token;
             $mail->Body    = "Bonjour $username,<br><br>Veuillez cliquer sur le lien suivant pour confirmer votre inscription: <a href='$confirmationLink'>$confirmationLink</a>";
             $mail->AltBody = "Bonjour $username, Veuillez copier ce lien dans votre navigateur pour confirmer votre inscription: $confirmationLink";
 
@@ -87,13 +89,13 @@ class AuthController
 
     public function confirmRegistration(string $token)
     {
-        $stmt = $this->db->conn->prepare("SELECT id, email, username FROM users WHERE confirmation_token=?");
+        $stmt = $this->db->conn->prepare("SELECT id, email, nom_utilisateur FROM utilisateurs WHERE code_confirmation = ?");
         $stmt->execute([$token]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($user) {
-            $stmt = $this->db->conn->prepare("UPDATE users SET is active=1, confirmation_token=NULL WHERE id=?");
-            $stmt->execute($user['id']);
+            $stmt = $this->db->conn->prepare("UPDATE utilisateurs SET est_confirme = 1, code_confirmation = NULL WHERE id = ?");
+            $stmt->execute([$user['id']]);
             return true;
         } else {
             return "Token invalide ou expiré.";
@@ -106,12 +108,13 @@ class AuthController
         $mail = new PHPMailer(true);
         try {
             $mail->isSMTP();
-            $mail->Host       = 'sandbox.smtp.mailtrap.io';
-            $mail->SMTPAuth   = true;
-            $mail->Username   = '5de6224ba106f1';
-            $mail->Password   = 'acba8c7cf472f0';
+            $mail->Host = $_ENV['MAIL_HOST'];
+            $mail->SMTPAuth = true;
+            $mail->Username = $_ENV['MAIL_USERNAME'];
+            $mail->Password = $_ENV['MAIL_PASSWORD'];
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-            $mail->Port       = 2525;
+            $mail->Port = $_ENV['MAIL_PORT'];
+            $mail->CharSet = 'UTF-8';
 
             $mail->setFrom('no-reply@example.com', 'AZAQUIZZ');
             $mail->addAddress($email, $username);
