@@ -1,5 +1,5 @@
 <?php
-require_once '../bdd/database.php';
+require_once dirname(__DIR__) . '/bdd/Database.php';
 
 class Quiz
 {
