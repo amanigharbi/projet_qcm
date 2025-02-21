@@ -22,6 +22,21 @@ $userScores = $quiz->getUserScores($user_id);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Accueil - Azaquizz</title>
+    <style>
+        body {
+            background: linear-gradient(to bottom, rgba(195, 181, 253, 0.55), rgba(237, 233, 254, 0.5), rgba(255, 255, 255, 1));
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .content {
+            width: 90%;
+            max-width: 1200px;
+            padding: 20px;
+        }
+    </style>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         function openMenu() {
@@ -34,10 +49,10 @@ $userScores = $quiz->getUserScores($user_id);
     </script>
 </head>
 
-<body class="bg-gray-100">
+<body>
     <?php include 'menu.php'; ?>
 
-    <nav class="bg-violet-700 p-4 flex justify-between items-center">
+    <nav class="bg-violet-700 p-4 flex justify-between items-center w-full">
         <button onclick="openMenu()" class="text-white text-2xl">&#9776;</button>
         <?php if (isset($_SESSION['nom_utilisateur'])): ?>
             <div class="flex items-center space-x-4 p-3 rounded-lg shadow-md bg-white">
