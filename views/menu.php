@@ -64,9 +64,9 @@ $targetProfile = $isLoggedIn ? 'profile.php' : 'index.php';
             </label>
             <div class="hidden peer-checked:block bg-violet-600">
                 <?php if ($isLoggedIn) : ?>
-                    <a href="#" class="block py-2 px-6 hover:bg-violet-500">Consulter mes QCM</a>
-                    <a href="#" class="block py-2 px-6 hover:bg-violet-500">Ajouter un QCM</a>
-                    <a href="#" class="block py-2 px-6 hover:bg-violet-500">Modifier mes QCM</a>
+                    <a href="Myqcm.php" class=" block py-2 px-6 hover:bg-violet-500">Consulter mes QCM</a>
+                    <a href="AddQCM.php" class="block py-2 px-6 hover:bg-violet-500">Ajouter un QCM</a>
+                    <a href="modifyqcm.php" class="block py-2 px-6 hover:bg-violet-500">Modifier mes QCM</a>
                 <?php else : ?>
                     <p class="block py-2 px-6 text-gray-300">Connectez-vous pour voir vos QCM</p>
                 <?php endif; ?>

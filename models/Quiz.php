@@ -70,4 +70,20 @@ class Quiz
         $stmt = $this->pdo->prepare("INSERT INTO resultats_utilisateur_qcm (utilisateur_id, qcm_id, score, complete_le) VALUES (?, ?, ?, NOW())");
         return $stmt->execute([$utilisateur_id, $qcm_id, $score]);
     }
+    public function getAll()
+    {
+        $stmt = $this->pdo->query("SELECT * FROM qcm");
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    public function getById($id)
+    {
+        $stmt = $this->pdo->prepare("SELECT * FROM qcm WHERE id = ?");
+        $stmt->execute([$id]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+    public function create($title, $description, $creatorId)
+    {
+        $stmt = $this->pdo->prepare("INSERT INTO qcm (title, description, creator_id) VALUES (?, ?, ?)");
+        return $stmt->execute([$title, $description, $creatorId]);
+    }
 }
