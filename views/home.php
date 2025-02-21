@@ -13,7 +13,6 @@ $user_id = $_SESSION['user_id'];
 
 $quiz = new Quiz();
 $availableQuizzes = $quiz->getAllQuizzes();
-$userScores = $quiz->getUserScores($user_id);
 ?>
 
 <!DOCTYPE html>
@@ -60,41 +59,7 @@ $userScores = $quiz->getUserScores($user_id);
             </div>
         </div>
 
-        <div class="bg-white p-8 rounded-lg shadow-md w-3/4 mx-auto text-center mt-10">
-            <h3 class="text-xl font-semibold mb-4">Historique de vos scores</h3>
-            <table class="table-auto w-full border-collapse border border-gray-200">
-                <thead>
-                    <tr class="bg-violet-700 text-white">
-                        <th class="px-4 py-2">Quiz</th>
-                        <th class="px-4 py-2">Score</th>
-                        <th class="px-4 py-2">Date</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php if (empty($userScores)) : ?>
-                        <tr>
-                            <td colspan="3" class="px-4 py-2 text-gray-500">Aucun score enregistré.</td>
-                        </tr>
-                    <?php else : ?>
-                        <?php foreach ($userScores as $score) : ?>
-                            <tr class="border-b border-gray-200">
-                                <td class="px-4 py-2"><?= htmlspecialchars($score['titre'] ?? 'Inconnu'); ?></td>
-                                <td class="px-4 py-2">
-                                    <?= isset($score['score'], $score['total_questions'])
-                                        ? htmlspecialchars($score['score'] . '/' . $score['total_questions'])
-                                        : 'N/A'; ?>
-                                </td>
-                                <td class="px-4 py-2">
-                                    <?= isset($score['date']) && !empty($score['date'])
-                                        ? date("d/m/Y H:i", strtotime($score['date']))
-                                        : 'Date inconnue'; ?>
-                                </td>
-                            </tr>
-                        <?php endforeach; ?>
-                    <?php endif; ?>
-                </tbody>
-            </table>
-        </div>
+
     </div>
 </body>
 
