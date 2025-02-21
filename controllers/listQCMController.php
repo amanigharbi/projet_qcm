@@ -2,17 +2,13 @@
 require_once __DIR__ . '/../bdd/Database.php';
 require_once __DIR__ . '/../models/QCM.php';
 
-
-function obtenirQCM($categorie_id)
+function obtenirQCM($categorie_id = null)
 {
     $qcm = new ListQCM();
-
-
 
     if ($categorie_id) {
         return $qcm->recupereQCMCate($categorie_id);
     } else {
-        echo 'Catégorie non reconnue';
-        return [];
+        return $qcm->recupereQCM();
     }
 }

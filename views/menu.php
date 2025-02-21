@@ -1,3 +1,8 @@
+<?php
+require_once '../models/Quiz.php';
+$quiz = new Quiz();
+$categories = $quiz->getAllCategories();
+?>
 <!-- Fond semi-transparent pour masquer la page quand le menu est ouvert -->
 <div id="overlay" class="fixed inset-0 bg-black bg-opacity-50 hidden" onclick="closeMenu()"></div>
 
@@ -25,15 +30,14 @@
                     Par thèmes <span>▾</span>
                 </label>
                 <div class="hidden peer-checked:block bg-violet-500">
-
-                    <a href="#" class="block py-2 px-8 hover:bg-violet-400">Histoire</a>
-                    <a href="#" class="block py-2 px-8 hover:bg-violet-400">Géographie</a>
-                    <a href="#" class="block py-2 px-8 hover:bg-violet-400">Sciences</a>
-                    <a href="#" class="block py-2 px-8 hover:bg-violet-400">Cinéma</a>
-                    <a href="#" class="block py-2 px-8 hover:bg-violet-400">Art</a>
-                    <a href="#" class="block py-2 px-8 hover:bg-violet-400">Sport</a>
+                    <?php foreach ($categories as $categorie) : ?>
+                        <a href="ListQCM.php?categorie_id=<?= htmlspecialchars($categorie['id']); ?>"
+                            class="block py-2 px-8 hover:bg-violet-400">
+                            <?= htmlspecialchars($categorie['nom']); ?>
+                        </a>
+                    <?php endforeach; ?>
                 </div>
-                <a href="#" class="block py-2 px-6 hover:bg-violet-500">Tous les QCM</a>
+                <a href="ListQCM.php" class="block py-2 px-6 hover:bg-violet-500">Tous les QCM</a>
             </div>
         </div>
 

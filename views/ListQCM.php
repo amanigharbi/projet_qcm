@@ -1,29 +1,25 @@
-<?php require_once '../controllers/listQCMController.php';
+<?php
+require_once '../controllers/listQCMController.php';
+require_once '../bdd/database.php';
 session_start();
 
 $nomUtilisateur = $_SESSION['nom'] ?? "Utilisateur";
-$user_id = $_SESSION['user_id'];
+$user_id = $_SESSION['user_id'] ?? null;
 
 $categorie_id = $_GET['categorie_id'] ?? null;
+$results = obtenirQCM($categorie_id);
 
-if (isset($_GET['categorie_id'])) {
-
-    $results = obtenirQCM($_GET['categorie_id']);
-} else {
-    $results = obtenirQCM(null);
-}
-
-
-
+// Connexion à la base de données pour récupérer les questions
+$pdo = (new Database())->conn;
 ?>
-<!DOCTYPE html>
 
+<!DOCTYPE html>
 <html lang="fr">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Liste des Questions</title>
+    <title>Liste des QCM</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         function openMenu() {
@@ -61,43 +57,50 @@ if (isset($_GET['categorie_id'])) {
 
     <div class="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-md mt-6">
         <h1 class="text-2xl font-bold mb-4">Sélectionnez un Quiz</h1>
-        <?php foreach ($results as $result): ?>
-            <div class="flex items-center border-b py-4">
-                <img src="<?= htmlspecialchars($result['image'] ?? 'default.jpg') ?>"
-                    alt="<?= htmlspecialchars($result['nom'] ?? 'Quiz') ?>"
-                    class="w-16 h-16 object-cover rounded-md">
 
-                <div class="ml-4 flex-1">
-                    <h2 class="text-lg font-semibold"><?= htmlspecialchars($result['titre'] ?? 'Titre inconnu') ?></h2>
-                    <p class="text-gray-600"><?= htmlspecialchars($result['description'] ?? 'Aucune description disponible.') ?></p>
-                </div>
+        <?php if (!empty($results)): ?>
+            <?php foreach ($results as $result): ?>
 
-                <?php if ($result['id']) : ?>
-                    <?php
-                    // Vérifier si le QCM contient des questions
-                    require_once '../bdd/database.php';
-                    $pdo = (new Database())->conn;
+                <?php
+                // Vérifier si le QCM contient des questions
+                $nombreQuestions = 0;
+                if (!empty($result['id'])) {
                     $stmt = $pdo->prepare("SELECT COUNT(*) FROM questions WHERE qcm_id = ?");
                     $stmt->execute([$result['id']]);
                     $nombreQuestions = $stmt->fetchColumn();
-                    ?>
+                }
+                ?>
 
-                    <?php if ($nombreQuestions > 0): ?>
-                        <a href="quiz.php?qcm_id=<?= htmlspecialchars($result['id']); ?>"
-                            class="bg-violet-600 text-white px-4 py-2 rounded hover:bg-violet-700 transition">
-                            Je commence
-                        </a>
-                    <?php else: ?>
-                        <button class="bg-gray-400 text-white px-4 py-2 rounded cursor-not-allowed" disabled>
-                            Indisponible
-                        </button>
+                <div class="flex items-center border-b py-4">
+                    <img src="<?= htmlspecialchars($result['image'] ?? 'default.jpg') ?>"
+                        alt="<?= htmlspecialchars($result['nom'] ?? 'Quiz') ?>"
+                        class="w-16 h-16 object-cover rounded-md">
+
+                    <div class="ml-4 flex-1">
+                        <h2 class="text-lg font-semibold">
+                            <?= htmlspecialchars($result['titre'] ?? 'Titre inconnu') ?>
+                            (<?= $nombreQuestions ?> questions)
+                        </h2>
+                        <p class="text-gray-600"><?= htmlspecialchars($result['description'] ?? 'Aucune description disponible.') ?></p>
+                    </div>
+
+                    <?php if (!empty($result['id'])): ?>
+                        <?php if ($nombreQuestions > 0): ?>
+                            <a href="quiz.php?qcm_id=<?= htmlspecialchars($result['id']); ?>"
+                                class="bg-violet-600 text-white px-4 py-2 rounded hover:bg-violet-700 transition">
+                                Je commence
+                            </a>
+                        <?php else: ?>
+                            <button class="bg-gray-400 text-white px-4 py-2 rounded cursor-not-allowed" disabled>
+                                Indisponible
+                            </button>
+                        <?php endif; ?>
                     <?php endif; ?>
-                <?php endif; ?>
-
-            </div>
-        <?php endforeach; ?>
-
-
+                </div>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <p class="text-center text-gray-600">Aucun QCM disponible.</p>
+        <?php endif; ?>
     </div>
 
 </body>
