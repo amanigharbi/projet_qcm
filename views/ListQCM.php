@@ -87,7 +87,7 @@ $pdo = (new Database())->conn;
                 ?>
 
                 <div class="flex items-center border-b py-4">
-                    <img src="<?= htmlspecialchars($result['image'] ?? 'default.jpg') ?>"
+                    <img src="<?= htmlspecialchars($result['image'] ?? 'https://img.icons8.com/?size=100&id=3979&format=png&color=000000') ?>"
                         alt="<?= htmlspecialchars($result['nom'] ?? 'Quiz') ?>"
                         class="w-16 h-16 object-cover rounded-md">
 

@@ -21,7 +21,11 @@ class Quiz
         $stmt = $this->pdo->query("SELECT * FROM categories");
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-
+    public function getCategorieById($id)
+    {
+        $stmt = $this->pdo->query("SELECT * FROM categories where id = $id");
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
     public function getUserScores($user_id)
     {
         $stmt = $this->pdo->prepare("

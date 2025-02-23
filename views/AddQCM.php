@@ -254,7 +254,7 @@ $categories = ['Histoire', 'Géographie', 'Sciences', 'Cinéma', 'Art', 'Sport']
                 
                 <div>
                     <label class="block text-gray-700 mb-2">Question :</label>
-                    <input type="text" name="questions[][question]" 
+                    <input type="text" name="questions[${questionCount}][question]" 
                            class="w-full px-4 py-2 border rounded-md" 
                            oninput="updatePreview()">
                 </div>
@@ -264,7 +264,7 @@ $categories = ['Histoire', 'Géographie', 'Sciences', 'Cinéma', 'Art', 'Sport']
                         <div>
                             <label class="block text-gray-700 mb-2">Réponse ${i} :</label>
                             <input type="text" 
-                                   name="questions[][answers][]" 
+                                   name="questions[${questionCount}][answers][${i}]" 
                                    class="w-full px-4 py-2 border rounded-md" 
                                    oninput="updatePreview()">
                         </div>
@@ -273,7 +273,7 @@ $categories = ['Histoire', 'Géographie', 'Sciences', 'Cinéma', 'Art', 'Sport']
 
                 <div>
                     <label class="block text-gray-700 mb-2">Réponse correcte :</label>
-                    <select name="questions[][correct]" 
+                    <select name="questions[${questionCount}][correct]" 
                             class="w-full px-4 py-2 border rounded-md"
                             onchange="updatePreview()">
                         ${[0, 1, 2, 3].map(i => `

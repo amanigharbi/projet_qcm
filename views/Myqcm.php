@@ -21,8 +21,13 @@ error_log("ID d'utilisateur trouvé dans la session: " . $userId);
 $stmt = $pdo->prepare("SELECT * FROM qcm WHERE createur_id = ?");
 $stmt->execute([$userId]);
 $qcms = $stmt->fetchAll(PDO::FETCH_ASSOC);
+require_once '../models/Quiz.php';
 
-
+$q = new Quiz();
+foreach ($qcms as $quiz):
+    $id = $quiz['categorie_id'];
+    $cat = $q->getCategorieById($id);
+endforeach;
 ?>
 
 <!DOCTYPE html>
@@ -73,6 +78,15 @@ $qcms = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     <div class="container mx-auto p-4">
         <h2 class="text-3xl font-semibold text-violet-700 mb-4 text-center">Mes QCM</h2>
+        <div class="flex justify-end mb-6">
+            <button type="button" onclick="window.location.href='AddQCM.php'"
+                class="bg-violet-700 text-white px-6 py-3 rounded-md hover:bg-violet-600 transition-colors flex items-center justify-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clip-rule="evenodd" />
+                </svg>
+                Créer QCM
+            </button>
+        </div>
         <?php if (count($qcms) === 0): ?>
             <p class="text-gray-700 mb-4">Vous n'avez encore créé aucun QCM.</p>
         <?php else: ?>
@@ -80,7 +94,7 @@ $qcms = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <?php foreach ($qcms as $quiz): ?>
                     <div class="bg-white p-4 rounded-lg shadow-md">
                         <div class="flex items-center space-x-4">
-                            <img src="<?= htmlspecialchars($quiz['image'] ?? 'default.jpg') ?>"
+                            <img src="<?= htmlspecialchars($quiz['image'] ?? 'https://img.icons8.com/?size=100&id=3979&format=png&color=000000') ?>"
                                 alt="<?= htmlspecialchars($quiz['nom'] ?? 'Quiz') ?>"
                                 class="w-16 h-16 object-cover rounded-md">
 
@@ -88,22 +102,16 @@ $qcms = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         </div>
 
                         <p class="text-gray-700 mb-4"><?php echo htmlspecialchars($quiz['description']); ?></p>
-                        <p class="text-gray-600 mb-4"><strong>Catégorie :</strong> <?php echo htmlspecialchars($quiz['titre']); ?></p>
+                        <p class="text-gray-600 mb-4"><strong>Catégorie :</strong> <?php echo htmlspecialchars($cat['nom']); ?></p>
                         <div class="flex justify-between">
-                            <a href="modifyqcm.php?id=<?php echo $quiz['id']; ?>" class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600 transition duration-300">Modifier</a>
+                            <a href="modifyqcm.php?id=<?php echo $quiz['id']; ?>" class="bg-violet-600 text-white px-4 py-2 rounded hover:bg-violet-600transition duration-300">Modifier</a>
                             <a href="deleteqcm.php?id=<?php echo $quiz['id']; ?>" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition duration-300" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce QCM ?');">Supprimer</a>
                         </div>
                     </div>
                 <?php endforeach; ?>
             </div>
         <?php endif; ?>
-        <button type="button" onclick="addQcm()"
-            class="w-full lg:w-auto bg-violet-700 text-white px-6 py-3 rounded-md hover:bg-violet-600 transition-colors flex items-center justify-center gap-2">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clip-rule="evenodd" />
-            </svg>
-            Créer un nouveau QCM
-        </button>
+
 </body>
 
 </html>
