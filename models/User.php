@@ -50,6 +50,8 @@ class User
         $_SESSION['prenom'] = $user['prenom'];
         $_SESSION['email'] = $user['email'];
         $_SESSION['nom_utilisateur'] = $user['nom_utilisateur'];
+        $_SESSION['cree_le'] = $user['cree_le'];
+
 
         return true;
     }
@@ -145,5 +147,13 @@ class User
         ]);
 
         return true; // Succès
+    }
+
+    public function getUserById($user_id)
+    {
+        $sql = "SELECT * FROM utilisateurs WHERE id = :user_id";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute(['user_id' => $user_id]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 }

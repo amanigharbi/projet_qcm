@@ -1,11 +1,15 @@
 <?php
 session_start();
 
-// Si l'utilisateur est connecté, on le redirige vers la page home.php
 if (isset($_SESSION['user_id'])) {
     header("Location: views/home.php");
     exit();
 }
+require_once 'models/Quiz.php';
+
+// Récupération des catégories depuis la base de données
+$categorieModel = new Quiz();
+$categories = $categorieModel->getAllCategories();
 ?>
 
 <!DOCTYPE html>
@@ -14,7 +18,9 @@ if (isset($_SESSION['user_id'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Azaquizz</title>
+    <title>Index - Azaquizz</title>
+    <link rel="icon" type="image/png" href="./Image/logo_violet.svg">
+
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         function openMenu() {
@@ -23,15 +29,30 @@ if (isset($_SESSION['user_id'])) {
 
         function closeMenu() {
             document.getElementById("sidebar").classList.add("-translate-x-full");
+
         }
     </script>
+    <style>
+        body {
+            background: linear-gradient(to bottom, rgba(195, 181, 253, 0.55), rgba(237, 233, 254, 0.5), rgba(255, 255, 255, 1));
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .content {
+            width: 90%;
+            max-width: 1200px;
+            padding: 20px;
+        }
+    </style>
 </head>
 
-<body class="bg-gray-100">
+<body>
     <?php include 'views/menu.php'; ?>
+    <nav class="bg-violet-700 p-4 flex justify-between items-center w-full">
 
-    <!-- Navbar -->
-    <nav class="bg-violet-700 p-4 flex justify-between items-center">
         <button onclick="openMenu()" class="text-white text-2xl">&#9776;</button>
         <div>
             <a href="views/register.php" class="bg-white text-purple-700 px-4 py-2 rounded mr-2">S'inscrire</a>
@@ -39,47 +60,46 @@ if (isset($_SESSION['user_id'])) {
         </div>
     </nav>
 
-    <!-- Présentation -->
     <main class="text-center py-12">
-        <h1 class="text-4xl font-bold">AZAQUIZZ</h1>
-        <p class="text-lg text-gray-600">Défiez votre culture générale</p>
-
-        <div class="mt-4 space-x-4">
-            <button class="bg-gray-200 text-black px-4 py-2 rounded">Au hasard</button>
-            <button class="bg-black text-white px-4 py-2 rounded">Par thème</button>
-        </div>
+        <h1 id="site-title" class="text-5xl font-bold w-full text-black">AzaQuizz</h1>
     </main>
 
-    <!-- Section image -->
-    <section class="flex justify-center space-x-4 py-8">
-        <div class="w-64 h-40 bg-gray-300 flex items-center justify-center text-white text-xl">Introduction</div>
-        <div class="w-64 h-40 bg-gray-300 flex items-center justify-center text-white text-xl">Image</div>
+    <section class="flex flex-col items-center justify-center py-8 w-full max-w-screen-lg mx-auto">
+        <div class="flex items-center justify-between w-full">
+            <div class="w-1/3 flex justify-center">
+                <img src="Image/logo_violet.svg" alt="Logo" class="max-h-40 max-w-full mix-blend-multiply opacity-90">
+            </div>
+            <div class="w-2/3 text-left text-lg font-semibold px-4">
+                Bienvenue sur AzaQuizz, votre destination incontournable pour des quiz interactifs captivants ! Plongez dans un monde d'apprentissage ludique avec des défis variés sur des thèmes passionnants tels que l'histoire, la science, le cinéma et bien plus encore. Testez vos connaissances, ajoutez vos propres QCM et partagez-les avec la communauté. Amusez-vous tout en apprenant et défiez vos amis pour voir qui est le plus futé ! Rejoignez-nous dès aujourd'hui et transformez vos moments de loisir en opportunités d'apprentissage enrichissantes ! 🧠✨ </div>
+        </div>
+        </div>
+
+        <div class="py-8"></div>
+
+        <section class="w-full">
+            <h2 class="text-2xl font-semibold text-center mb-4">Thèmes</h2>
+            <div class="grid grid-cols-2 gap-6 text-gray-700">
+                <?php foreach ($categories as $categorie) : ?>
+                    <div class="text-center">
+                        <strong><?= htmlspecialchars($categorie['nom']) ?></strong>
+                        <img src="<?= htmlspecialchars($categorie['image']) ?>" alt="<?= htmlspecialchars($categorie['nom']) ?>"
+                            class="w-full h-32 object-cover mt-2 rounded-lg">
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        </section>
     </section>
 
-    <!-- Catégories -->
-    <section class="max-w-4xl mx-auto py-8">
-        <h2 class="text-xl font-semibold">Thèmes</h2>
-        <div class="grid grid-cols-2 gap-6 mt-4 text-gray-700">
-            <div> <strong>Histoire</strong>
-                <img src="https://cdn.pixabay.com/photo/2018/05/17/16/03/compass-3408928_1280.jpg" alt="Histoire" class="w-full h-32 object-cover mt-2">
-            </div>
-            <div> <strong>Géographie</strong>
-                <img src="https://cdn.pixabay.com/photo/2021/11/23/21/48/continents-6819704_1280.jpg" alt="Géographie" class="w-full h-32 object-cover mt-2">
-            </div>
-            <div> <strong>Cinéma</strong>
-                <img src="https://cdn.pixabay.com/photo/2017/09/30/10/11/camera-2801675_1280.jpg" alt="Cinéma" class="w-full h-32 object-cover mt-2">
-            </div>
-            <div> <strong>Science</strong>
-                <img src="https://cdn.pixabay.com/photo/2022/03/25/14/25/analysis-7091203_1280.jpg" alt="Science" class="w-full h-32 object-cover mt-2">
-            </div>
-            <div> <strong>Art</strong>
-                <img src="https://cdn.pixabay.com/photo/2017/12/28/16/18/bicycle-3045580_1280.jpg" alt="Art" class="w-full h-32 object-cover mt-2">
-            </div>
-            <div> <strong>Sport</strong>
-                <img src="https://cdn.pixabay.com/photo/2016/02/15/11/43/running-track-1201014_1280.jpg" alt="Sport" class="w-full h-32 object-cover mt-2">
-            </div>
-        </div>
-    </section>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const title = document.getElementById("site-title");
+            title.style.opacity = 0;
+            setTimeout(() => {
+                title.style.transition = "opacity 1.5s ease-in-out";
+                title.style.opacity = 1;
+            }, 500);
+        });
+    </script>
 </body>
 
 </html>

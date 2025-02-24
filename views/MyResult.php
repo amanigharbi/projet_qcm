@@ -1,16 +1,18 @@
 <?php
 session_start();
 require_once '../bdd/database.php';
+require_once '../models/Quiz.php';
 
 if (!isset($_SESSION['user_id'])) {
     header("Location: ../index.php");
     exit();
 }
 
-// Vérification du score
-$score = $_GET['score'] ?? 0;
-$questions = $_SESSION['responses'] ?? [];
-$totalQuestions = count($questions);
+$nomUtilisateur = $_SESSION['nom'] ?? "Utilisateur";
+$user_id = $_SESSION['user_id'];
+
+$quiz = new Quiz();
+$userScores = $quiz->getUserScores($user_id);
 ?>
 
 <!DOCTYPE html>
@@ -19,7 +21,7 @@ $totalQuestions = count($questions);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Résultats du Quiz</title>
+    <title>Mes résultats - QCM</title>
     <link rel="icon" type="image/png" href="../Image/logo_violet.svg">
 
     <style>
@@ -74,35 +76,43 @@ $totalQuestions = count($questions);
         <?php endif; ?>
     </nav>
 
-    <div class="flex justify-center items-center min-h-screen">
-        <div class="bg-white p-8 rounded-lg shadow-lg w-[600px] text-center">
-            <h2 class="text-2xl font-semibold mb-6 text-gray-800">Quiz Terminé !</h2>
-            <p class="text-xl font-semibold text-green-600 mb-6">
-                Votre score : <?= htmlspecialchars($score); ?> / <?= htmlspecialchars($totalQuestions); ?>
-            </p>
+    <div class="container mx-auto mt-10">
 
-            <h3 class="text-lg font-medium mb-4 text-gray-800">Récapitulatif des réponses :</h3>
-            <div class="text-left">
-                <?php foreach ($questions as $index => $question) : ?>
-                    <div class="mb-4 p-4 border-l-4 rounded
-                        <?= $question['isCorrect'] ? 'border-green-500 bg-green-100' : 'border-red-500 bg-red-100'; ?>">
-                        <p class="font-semibold"><?= ($index + 1) . ". " . htmlspecialchars($question['question']); ?></p>
-                        <p class="text-gray-800">
-                            <strong>Réponse donnée :</strong>
-                            <?= empty($question['answer']) ? "<span class='text-orange-600'>Aucune réponse</span>" : htmlspecialchars($question['answer']); ?>
-                        </p>
-                        <p class="text-gray-800">
-                            <strong>Statut :</strong>
-                            <?= $question['isCorrect'] ? "<span class='text-green-600'>Correct</span>" : "<span class='text-red-600'>Incorrect</span>"; ?>
-                        </p>
-                    </div>
-                <?php endforeach; ?>
-            </div>
 
-            <a href="quiz.php?qcm_id=<?= $_SESSION['current_qcm']; ?>&restart=1"
-                class="mt-6 inline-block bg-violet-700 text-white px-6 py-3 rounded text-lg hover:bg-violet-800">
-                Recommencer
-            </a>
+        <div class="bg-white p-8 rounded-lg shadow-md w-3/4 mx-auto text-center mt-10">
+            <h3 class="text-xl font-semibold mb-4">Historique de vos scores</h3>
+            <table class="table-auto w-full border-collapse border border-gray-200">
+                <thead>
+                    <tr class="bg-violet-700 text-white">
+                        <th class="px-4 py-2">Quiz</th>
+                        <th class="px-4 py-2">Score</th>
+                        <th class="px-4 py-2">Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php if (empty($userScores)) : ?>
+                        <tr>
+                            <td colspan="3" class="px-4 py-2 text-gray-500">Aucun score enregistré.</td>
+                        </tr>
+                    <?php else : ?>
+                        <?php foreach ($userScores as $score) : ?>
+                            <tr class="border-b border-gray-200">
+                                <td class="px-4 py-2"><?= htmlspecialchars($score['titre'] ?? 'Inconnu'); ?></td>
+                                <td class="px-4 py-2">
+                                    <?= isset($score['score'], $score['total_questions'])
+                                        ? htmlspecialchars($score['score'] . '/' . $score['total_questions'])
+                                        : 'N/A'; ?>
+                                </td>
+                                <td class="px-4 py-2">
+                                    <?= isset($score['date']) && !empty($score['date'])
+                                        ? date("d/m/Y H:i", strtotime($score['date']))
+                                        : 'Date inconnue'; ?>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </tbody>
+            </table>
         </div>
     </div>
 </body>

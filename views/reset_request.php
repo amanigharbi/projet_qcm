@@ -14,6 +14,8 @@ unset($_SESSION['error_message'], $_SESSION['success_message']);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Réinitialisation du mot de passe</title>
+    <link rel="icon" type="image/png" href="../Image/logo_violet.svg">
+
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         function openMenu() {
@@ -24,13 +26,28 @@ unset($_SESSION['error_message'], $_SESSION['success_message']);
             document.getElementById("sidebar").classList.add("-translate-x-full");
         }
     </script>
+    <style>
+        body {
+            background: linear-gradient(to bottom, rgba(195, 181, 253, 0.55), rgba(237, 233, 254, 0.5), rgba(255, 255, 255, 1));
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .content {
+            width: 90%;
+            max-width: 1200px;
+            padding: 20px;
+        }
+    </style>
 </head>
 
-<body class="bg-gray-100">
+<body>
     <?php include 'menu.php'; ?>
 
     <!-- Navbar -->
-    <nav class="bg-violet-700 p-4 flex justify-between items-center">
+    <nav class="bg-violet-700 p-4 flex justify-between items-center w-full">
         <button onclick="openMenu()" class="text-white text-2xl">&#9776;</button>
         <div>
             <a href="register.php" class="bg-white text-violet-700 px-4 py-2 rounded mr-2">S'inscrire</a>
