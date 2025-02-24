@@ -22,7 +22,7 @@ Ce projet est une application web permettant aux utilisateurs de créer, modifie
 
 ### 1️⃣ Cloner le projet
 
-```bash
+```bash```
 git clone https://github.com/amanigharbi/projet_qcm.git
 cd projet_qcm
 
@@ -58,7 +58,7 @@ Si vous souhaitez tester l'envoi d'emails, assurez-vous d'avoir un compte **Mail
 
 php -S localhost:8000
 
-Puis, ouvrez votre navigateur et accédez à : (http://localhost:8000)]
+Puis, ouvrez votre navigateur et accédez à : (http://localhost:8000)[(http://localhost:8000)]
 
 
 
