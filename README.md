@@ -58,7 +58,7 @@ Si vous souhaitez tester l'envoi d'emails, assurez-vous d'avoir un compte **Mail
 
 php -S localhost:8000
 
-Puis, ouvrez votre navigateur et accédez à : (http://localhost:8000)[http://localhost:8000]
+Puis, ouvrez votre navigateur et accédez à : (http://localhost:8000)]
 
 
 
