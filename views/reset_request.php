@@ -14,6 +14,8 @@ unset($_SESSION['error_message'], $_SESSION['success_message']);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Réinitialisation du mot de passe</title>
+    <link rel="icon" type="image/png" href="../Image/logo_violet.svg">
+
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         function openMenu() {

@@ -20,6 +20,8 @@ $totalQuestions = count($questions);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Résultats du Quiz</title>
+    <link rel="icon" type="image/png" href="../Image/logo_violet.svg">
+
     <style>
         body {
             background: linear-gradient(to bottom, rgba(195, 181, 253, 0.55), rgba(237, 233, 254, 0.5), rgba(255, 255, 255, 1));

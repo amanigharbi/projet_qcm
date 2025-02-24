@@ -9,6 +9,7 @@ session_start();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title> À Propos - AzaQuizz </title>
+    <link rel="icon" type="image/png" href="../Image/logo_violet.svg">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         function openMenu() {
@@ -65,8 +66,7 @@ session_start();
         <?php endif; ?>
     </nav>
 
-    <!-- Espace entre la navbar et la présentation -->
-    <div class="py-16"></div>
+
 
     <!-- Présentation -->
     <main class="text-center py-6 w-full max-w-3xl mx-auto">

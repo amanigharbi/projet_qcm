@@ -14,6 +14,8 @@ $message = isset($_GET['message']) ? $_GET['message'] : 'Votre QCM a été ajout
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Feedback - QCM</title>
+    <link rel="icon" type="image/png" href="../Image/logo_violet.svg">
+
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         function openMenu() {

@@ -33,6 +33,7 @@ $categories = ['Histoire', 'Géographie', 'Sciences', 'Cinéma', 'Art', 'Sport']
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ajouter un QCM</title>
+    <link rel="icon" type="image/png" href="../Image/logo_violet.svg">
     <link rel="stylesheet" href="assets/styles.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <script defer src="assets/tagInput.js"></script>
