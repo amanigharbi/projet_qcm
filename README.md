@@ -32,7 +32,7 @@ composer install
 
 ### 3️⃣ Configurer la base de données
 
-** mysql -u votre_utilisateur -p votre_base_de_données < bdd/qcm_platform.sql
+- mysql -u votre_utilisateur -p votre_base_de_données < bdd/qcm_platform.sql
 
 Mettez à jour votre fichier **.env** avec vos paramètres de connexion MySQL :
 
