@@ -80,4 +80,18 @@ class QuizController
         $stmt->execute([$reponse_id]);
         return $stmt->fetchColumn();
     }
+    public function modifyQcm($qcm_id, $title, $description, $questions, $cat_id)
+    {
+        // Met à jour le titre et la description du QCM
+        $this->quiz->updateQcm($qcm_id, $title, $description, $cat_id);
+
+        // Met à jour les questions et leurs réponses
+        foreach ($questions as $question) {
+            $this->quiz->updateQuestion($question['id'], $question['texte_question']);
+
+            foreach ($question['reponses'] as $reponse) {
+                $this->quiz->updateReponse($reponse['id'], $reponse['texte_reponse'], $reponse['est_correcte']);
+            }
+        }
+    }
 }

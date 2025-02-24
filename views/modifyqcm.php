@@ -1,33 +1,60 @@
 <?php
 session_start();
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
+require_once '../controllers/QuizController.php';
+require_once '../models/Quiz.php';
 
-require_once __DIR__ . '/../bdd/Database.php';
+// Vérifier si l'utilisateur est connecté
 if (!isset($_SESSION['user_id'])) {
-    header("Location: login.php");
-    exit;
+    header('Location: login.php');
+    exit();
 }
 
-$database = new Database();
-$pdo = $database->conn;
-$userId = $_SESSION['user_id'];
+$quizController = new QuizController();
+$quizModel = new Quiz();
 
-if (isset($_GET['delete'])) {
-    $qcmId = $_GET['delete'];
-    $stmt = $pdo->prepare("DELETE FROM qcm WHERE id = ? AND createur_id = ?");
-    if ($stmt->execute([$qcmId, $userId])) {
-        header("Location: myqcm.php?status=success&message=QCM supprimé avec succès.");
-    } else {
-        header("Location: myqcm.php?status=error&message=Erreur lors de la suppression du QCM.");
+$qcm_id = $_GET['id'] ?? null;
+
+if (!$qcm_id) {
+    die("ID du QCM non fourni !");
+}
+
+// Récupérer les informations du QCM
+$qcm = $quizModel->getById($qcm_id);
+$questions = $quizModel->getQuestionsByQcmId($qcm_id);
+$availableCateg = $quizModel->getAllCategories();
+
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $title = $_POST['title'];
+    $description = $_POST['description'];
+    $questionsData = [];
+
+    foreach ($_POST['questions'] as $question_id => $question_text) {
+        $question = [
+            'id' => $question_id,
+            'texte_question' => $question_text,
+            'reponses' => []
+        ];
+
+        foreach ($_POST['reponses'][$question_id] as $reponse_id => $reponse_text) {
+            $isCorrect = isset($_POST['correct'][$reponse_id]) ? 1 : 0;
+            $question['reponses'][] = [
+                'id' => $reponse_id,
+                'texte_reponse' => $reponse_text,
+                'est_correcte' => $isCorrect
+            ];
+        }
+
+        $questionsData[] = $question;
     }
-    exit;
-}
 
-$stmt = $pdo->prepare("SELECT * FROM qcm WHERE createur_id = ?");
-$stmt->execute([$userId]);
-$qcms = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    // Met à jour le QCM avec ses questions et réponses
+    $quizController->modifyQcm($qcm_id, $title, $description, $questionsData, $_POST['categorie']);
+
+    // Redirection après la mise à jour
+    header("Location: Myqcm.php");
+    exit();
+}
 ?>
 
 <!DOCTYPE html>
@@ -36,8 +63,9 @@ $qcms = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mes QCM</title>
+    <title>Modifier un QCM</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="assets/styles.css">
     <style>
         body {
             background: linear-gradient(to bottom, rgba(195, 181, 253, 0.55), rgba(237, 233, 254, 0.5), rgba(255, 255, 255, 1));
@@ -74,27 +102,67 @@ $qcms = $stmt->fetchAll(PDO::FETCH_ASSOC);
             </div>
         <?php endif; ?>
     </nav>
-    <div class="container mx-auto p-4">
-        <h2 class="text-3xl font-semibold text-violet-700 mb-4">Mes QCM</h2>
-        <?php if (empty($qcms)): ?>
-            <p class="text-gray-700">Vous n'avez encore créé aucun QCM.</p>
-        <?php else: ?>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                <?php foreach ($qcms as $quiz): ?>
-                    <div class="bg-white p-4 rounded-lg shadow-md">
-                        <h3 class="text-xl font-semibold text-violet-700 mb-2"><?php echo htmlspecialchars($quiz['titre']); ?></h3>
-                        <p class="text-gray-700 mb-4"><?php echo htmlspecialchars($quiz['description']); ?></p>
-                        <p class="text-gray-600 mb-4"><strong>Catégorie :</strong> <?php echo htmlspecialchars($quiz['titre']); ?></p>
-                        <div class="flex justify-between">
-                            <a href="modifyqcm.php?id=<?php echo $quiz['id']; ?>" class="bg-yellow-500 text-white px-4 py-2 rounded">Modifier</a>
-                            <a href="deleteqcm.php?id=<?php echo $quiz['id']; ?>" class="bg-red-600 text-white px-4 py-2 rounded" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce QCM ?');">Supprimer</a>
-                        </div>
-                    </div>
-                <?php endforeach; ?>
+
+    <div class="container mx-auto p-4 lg:p-8 max-w-4xl">
+        <div class="mb-8">
+
+            <h2 class="text-3xl lg:text-4xl font-bold text-violet-700 mb-2 text-center">Modifier le QCM : <?= htmlspecialchars($qcm['titre']) ?></h2>
+            <br>
+            <p class="text-gray-600">Mettre à jour les informations que vous voulez dans votre qcm </p>
+
+        </div>
+        <form action="" method="POST" class="space-y-6 bg-white p-6 lg:p-8 rounded-xl shadow-lg">
+            <div class="mb-4">
+                <label class="block text-gray-700 font-bold">Titre du QCM :</label>
+                <input type="text" name="title" value="<?= htmlspecialchars($qcm['titre']) ?>" required
+                    class="w-full px-4 py-2 border rounded-md">
             </div>
-        <?php endif; ?>
-        <button onclick="window.location.href='addqcm.php'" class="mt-4 bg-violet-700 text-white px-6 py-3 rounded-md">Créer un nouveau QCM</button>
+
+            <div class="mb-4">
+                <label class="block text-gray-700 font-bold">Description :</label>
+                <textarea name="description" required class="w-full px-4 py-2 border rounded-md h-32"><?= htmlspecialchars($qcm['description']) ?></textarea>
+                <div class="mb-4">
+                    <label class="block text-gray-700 font-bold">Catégorie :</label>
+                    <select name="categorie" class="w-full px-4 py-2 border rounded-md">
+                        <?php foreach ($availableCateg as $categorie): ?>
+                            <option value="<?= $categorie['id'] ?>" <?= ($qcm['categorie_id'] == $categorie['id']) ? 'selected' : '' ?>>
+                                <?= htmlspecialchars($categorie['nom']) ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+
+                </div>
+
+                <div id="questionSections">
+                    <?php foreach ($questions as $index => $question): ?>
+                        <div class="bg-gray-50 p-4 rounded-lg mb-4">
+                            <label class="block text-gray-700 font-bold">Question :</label>
+                            <input type="text" name="questions[<?= $question['id'] ?>]" value="<?= htmlspecialchars($question['texte_question']) ?>"
+                                class="w-full px-4 py-2 border rounded-md">
+
+                            <div class="mt-4">
+                                <label class="block text-gray-700 font-bold">Réponses :</label>
+                                <?php $reponses = $quizModel->getReponses($question['id']); ?>
+                                <?php foreach ($reponses as $reponse): ?>
+                                    <div class="flex items-center gap-2 mt-2">
+                                        <input type="text" name="reponses[<?= $question['id'] ?>][<?= $reponse['id'] ?>]"
+                                            value="<?= htmlspecialchars($reponse['texte_reponse']) ?>"
+                                            class="w-full px-4 py-2 border rounded-md">
+                                        <input type="checkbox" name="correct[<?= $reponse['id'] ?>]" <?= $reponse['est_correcte'] ? 'checked' : '' ?>>
+                                        <span>Correct</span>
+                                    </div>
+                                <?php endforeach; ?>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+
+                <button type="submit" class="w-full bg-violet-700 text-white px-6 py-3 rounded-md hover:bg-violet-600 transition-colors">
+                    Modifier le QCM
+                </button>
+        </form>
     </div>
+
 </body>
 
 </html>

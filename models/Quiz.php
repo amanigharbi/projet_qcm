@@ -90,4 +90,31 @@ class Quiz
         $stmt = $this->pdo->prepare("INSERT INTO qcm (title, description, creator_id) VALUES (?, ?, ?)");
         return $stmt->execute([$title, $description, $creatorId]);
     }
+    public function updateQcm($qcm_id, $title, $description, $cat_id)
+    {
+        $stmt = $this->pdo->prepare("UPDATE qcm SET titre = ?, description = ?, categorie_id = ? WHERE id = ?");
+        return $stmt->execute([$title, $description, $cat_id, $qcm_id]);
+    }
+
+    public function updateQuestion($question_id, $texte_question)
+    {
+        $stmt = $this->pdo->prepare("UPDATE questions SET texte_question = ? WHERE id = ?");
+        return $stmt->execute([$texte_question, $question_id]);
+    }
+
+    public function updateReponse($reponse_id, $texte_reponse, $est_correcte)
+    {
+        $stmt = $this->pdo->prepare("UPDATE reponses_utilisateur SET texte_reponse = ?, est_correcte = ? WHERE id = ?");
+        return $stmt->execute([$texte_reponse, $est_correcte, $reponse_id]);
+    }
+    public function getTagsByQcmId($qcm_id)
+    {
+        $query = "SELECT t.nom FROM tags t 
+                  INNER JOIN qcm_tags qt ON t.id = qt.tag_id 
+                  WHERE qt.qcm_id = :qcm_id";
+        $stmt = $this->pdo->prepare($query);
+        $stmt->bindParam(':qcm_id', $qcm_id, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }

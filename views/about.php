@@ -39,7 +39,7 @@ session_start();
     </style>
 </head>
 
-<body class="bg-gray-100">
+<body>
     <?php include 'menu.php'; ?>
 
     <!-- Navbar conditionnelle -->
